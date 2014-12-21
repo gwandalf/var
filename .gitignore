@@ -1,5 +1,5 @@
 res
-res/*
 *.gz
 *.pdf
-*.sty
+*.log
+*.aux

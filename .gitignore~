@@ -1,0 +1,6 @@
+res
+res/*
+*.gz
+*.pdf
+*.log
+*.aux
