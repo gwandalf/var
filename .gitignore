@@ -1,0 +1,5 @@
+res
+res/*
+*.gz
+*.pdf
+*.sty
