@@ -22,4 +22,11 @@ Your abstract.
 
 This paper presents a Human Machine multimodal Interface framework for Virtual Environments (VE). The addressed interaction paradigms are based on speech and gesture recognition (multimodal aspect). Its main challenge is to be efficient in a highly interactive context, with an obligation to adapt to real-time. Another requirement is to be an adaptable tool, re-usable, extensible and configurable.
 
+A multimodal interface use recognition methods that must take into account the VE context. For example, in speech recognition, spatial positioning depends on the spatial position of the speaker (\textit{"The left object"} refers to different objects with respect to the user position in the scene). The problem can be solved by implementing a close coupling between the scene representation and the recognition modules. However, such a coupling suffers of 3 main issues (TODO: reformuler après avoir mieux compris l'article):
+\begin{enumerate}
+	\item Sampling rates policy different between speech recognition and VR systems.
+	\item De-synchronization between the recognition system and the VE. The recognition process needs information on the current state of the scene and so "waits" for new data, while the systems evolves through another state. There is also a need for former information, not present any more in the current state of the scene.
+	\item The simulation rate can change.
+\end{enumerate}
+
 \end{document}
