@@ -56,8 +56,8 @@ An example of multimodal command that could be processed by this system is the f
 
 The PrOSA module is composed of various entities which are represented on figure \ref{fig:PrOSA}. The purpose of each component is described below:
 
-\paragraph{Actuators} These are the link between the hardware and software sensors and the PrOSA module. They transform "messy" data coming from the sensors\footnote{"Messy" means that data is generated on-the-fly, with any order and with possibly different representations.} into well organized, normalized data, in form of Attribute Sequences and fields. In other word, they provide to the system entry data with a suitable representation for it. For example, for the use-case given in section \ref{sec:overview}, four actuators are used: one for the voice, another gather and convert information about the head position and the two lasts gather and convert information coming from the data gloves.
+\paragraph{Actuators} These are the link between the hardware and software sensors and the PrOSA module. They transform "messy" data coming from the sensors\footnote{"Messy" means that data is generated on-the-fly, with any order and with possibly different representations.} into well organized, normalized data, in form of Attribute Sequences. In other word, they provide to the system entry data with a suitable representation for it. For example, for the use-case given in section \ref{sec:overview}, four actuators are used: one for the voice, another gather and convert information about the head position and the two lasts gather and convert information coming from the data gloves.
 
-
+\paragraph{Histories} They consist of a list of sets of measures token at regular intervals of time. For example, a speech history is the list of words said by the actor with respect to the time. A spacemap history will rather describe the evolution of a set of distances of objects to the user and angles with the face direction. The histories are necessary for the multimodal analysis module to process formerly acquired data.
 
 \end{document}
