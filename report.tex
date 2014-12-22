@@ -62,4 +62,16 @@ The PrOSA module is composed of various entities which are represented on figure
 
 \paragraph{Raters} They are the entities that extract the measures to store in the histories from the Attribute Sequences provided by the actuators.
 
+\section{Knowledge Representation Layer}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{res/krl.png}
+\caption{\label{fig:krl}Knowledge Representation Layer.}
+\end{figure}
+
+This module is described on figure \ref{fig:krl}, which is self-explanatory. All instances of objects in the KRL have their counterpart in the scene graph. Such a couple define a Semantic Entity (SE). A mediator module allows to synchronize different representations of the same SE for different modules. For example, a transition of an object from a position to another can be represented as a difference between two points in the world coordinate system or as a graph path (each node represents a zone of the world).
+
+In our example, the KRL allows the other modules to know what interaction are possible with a wheel, with which speech and gesture command, and the meaning of such a gesture or sentence.
+
 \end{document}
