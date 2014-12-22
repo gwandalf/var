@@ -30,7 +30,7 @@ A multimodal interface use recognition methods that must take into account the V
 \end{enumerate}
 
 \section{Overview of the system}
-
+\label{sec:overview}
 \begin{figure}
 \centering
 \includegraphics[width=1\textwidth]{res/overview.png}
@@ -44,6 +44,20 @@ The figure \ref{fig:overview} shows an overview of the framework architecture. I
 	\item[KRL:] holds the knowledge about the objects of the scene, their features and their links (e.g, the possible interactions between two objects).
 \end{description}
 
-An example of multimodal command that could be processed by this system is the following use case: a user points a wheel with his hand and says \textit{"Turn the wheel like this"}, while doing the rotation gesture. The behaviour of the system will be explained by showing the processing of this command.
+An example of multimodal command that could be processed by this system is the following use case: a user points a wheel with his hand and says \textit{"Turn the wheel like this"}, while doing the rotation gesture. The behaviour of the system will be explained by showing the processing of this command. A head tracker is used in order to know the face orientation, data gloves are used for the hand tracking and a speech recorder is used for the voice.
+
+\section{Gesture processing}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{res/PrOSA.png}
+\caption{\label{fig:PrOSA}Gesture Processing module.}
+\end{figure}
+
+The PrOSA module is composed of various entities which are represented on figure \ref{fig:PrOSA}. The purpose of each component is described below:
+
+\paragraph{Actuators} These are the link between the hardware and software sensors and the PrOSA module. They transform "messy" data coming from the sensors\footnote{"Messy" means that data is generated on-the-fly, with any order and with possibly different representations.} into well organized, normalized data, in form of Attribute Sequences and fields. In other word, they provide to the system entry data with a suitable representation for it. For example, for the use-case given in section \ref{sec:overview}, four actuators are used: one for the voice, another gather and convert information about the head position and the two lasts gather and convert information coming from the data gloves.
+
+
 
 \end{document}
