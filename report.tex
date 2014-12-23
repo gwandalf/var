@@ -74,4 +74,30 @@ This module is described on figure \ref{fig:krl}, which is self-explanatory. All
 
 In our example, the KRL allows the other modules to know what interaction are possible with a wheel, with which speech and gesture command, and the meaning of such a gesture or sentence.
 
+\section{Recognition module}
+
+The intuition of the recognition module working is to sequentially analyse the user actions (including speech and gestures) step by step, while setting up the resulting action. When the users actions were entirely analysed, the resulting system action is considered to be completely defined and so it is performed.
+
+We can take the use-case defined in section \ref{sec:overview} in order to illustrate this intuition:
+
+\paragraph{"Turn..."} The system "understands" that it will have to perform a rotation and as a consequence set-up a Rotation Action. This Action is characterized by an object to rotate, an axis, and an angle, which remain unknown for now.
+
+\paragraph{\[pointing gesture\]} The object to rotate is located in the direction pointed by the user. As there can be many different objects in this direction, the indications are insufficient for now.
+
+\paragraph{"... the wheel..."} The object is a wheel. The system can now gather the information and use the fact that the direction is known in order to determine which wheel is pointed.
+
+\paragraph{"... like this."} The system prepares now to recognize a movement description. As the awaited movement is a rotation, it will now await an action allowing to define an axis and an angle.
+
+\paragraph{\[rotation gesture\]} From the gesture, the system can retrieve the angle and the axis.
+
+The formal way to implement this intuition is to use a graph structure (as it is done in the tATN module). An example is given on figure \ref{fig:tATN}. The edges are associated to a transition condition (a detected action of the user), guarding a system action (its reaction to the user action, as depicted in the intuition). The nodes don't have a semantic signification, but they can be interpreted as the states of the system control variables used in order to set-up the resulting action.
+
+%TODO : system action types, specific nodes, communication with the other modules (linked to action types).
+
+\begin{figure}
+\centering
+\includegraphics[width=1\textwidth]{res/tATN.png}
+\caption{\label{fig:tATN}tATN module.}
+\end{figure}
+
 \end{document}
