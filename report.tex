@@ -24,12 +24,12 @@ This paper presents a Human Machine multimodal Interface framework for Virtual E
 
 A multimodal interface use recognition methods that must take into account the VE context. For example, in speech recognition, spatial positioning depends on the spatial position of the speaker (\textit{"The left object"} refers to different objects with respect to the user position in the scene). The problem can be solved by implementing a close coupling between the scene representation and the recognition modules. However, such a coupling suffers of 3 main issues (TODO: reformuler après avoir mieux compris l'article):
 \begin{enumerate}
-	\item Sampling rates policy different between speech recognition and VR systems.
+	\item Sampling rates policies differ between classic speech recognition methods and VR systems.
 	\item De-synchronization between the recognition system and the VE. The recognition process needs information on the current state of the scene and so "waits" for new data, while the systems evolves through another state. There is also a need for former information, not present any more in the current state of the scene.
 	\item The simulation rate can change.
 \end{enumerate}
 
-\section{Overview of the system}
+\subsection{Overview of the system}
 \label{sec:overview}
 \begin{figure}
 \centering
@@ -46,7 +46,7 @@ The figure \ref{fig:overview} shows an overview of the framework architecture. I
 
 An example of multimodal command that could be processed by this system is the following use case: a user points a wheel with his hand and says \textit{"Turn the wheel like this"}, while doing the rotation gesture. The behaviour of the system will be explained by showing the processing of this command. A head tracker is used in order to know the face orientation, data gloves are used for the hand tracking and a speech recorder is used for the voice.
 
-\section{Gesture processing}
+\subsection{Gesture processing}
 
 \begin{figure}
 \centering
@@ -56,13 +56,13 @@ An example of multimodal command that could be processed by this system is the f
 
 The PrOSA module is composed of various entities which are represented on figure \ref{fig:PrOSA}. The purpose of each component is described below:
 
-\paragraph{Actuators} These are the link between the hardware and software sensors and the PrOSA module. They transform "messy" data coming from the sensors\footnote{"Messy" means that data is generated on-the-fly, with any order and with possibly different representations.} into well organized, normalized data, in form of Attribute Sequences. In other word, they provide to the system entry data with a suitable representation for it. For example, for the use-case given in section \ref{sec:overview}, four actuators are used: one for the voice, another gather and convert information about the head position and the two lasts gather and convert information coming from the data gloves.
+\paragraph{Actuators} These are the link between the hardware and software sensors and the PrOSA module. They transform "messy" data\footnote{"Messy" means that data is generated on-the-fly, with any order and with possibly different representations.} coming from the sensors into well organized, normalized data, in form of Attribute Sequences (AS). In other word, they provide to the system entry data with a suitable representation for it. For example, for the use-case given in section \ref{sec:overview}, four actuators are used: one for the voice, another gathers and converts information about the head position and the two lasts gather and convert information coming from the data gloves.
 
 \paragraph{Histories} They consist of a list of sets of measures token at regular intervals of time. For example, a speech history is the list of words said by the actor with respect to the time. A spacemap history will rather describe the evolution of a set of distances of objects to the user and angles with the face direction. The histories are necessary for the multimodal analysis module to process formerly acquired data.
 
-\paragraph{Raters} They are the entities that extract the measures to store in the histories from the Attribute Sequences provided by the actuators.
+\paragraph{Raters} They are the entities that extract the measures to store in the histories from the AS provided by the actuators.
 
-\section{Knowledge Representation Layer}
+\subsection{Knowledge Representation Layer}
 
 \begin{figure}
 \centering
@@ -70,11 +70,11 @@ The PrOSA module is composed of various entities which are represented on figure
 \caption{\label{fig:krl}Knowledge Representation Layer.}
 \end{figure}
 
-This module is described on figure \ref{fig:krl}, which is self-explanatory. All instances of objects in the KRL have their counterpart in the scene graph. Such a couple define a Semantic Entity (SE). A mediator module allows to synchronize different representations of the same SE for different modules. For example, a transition of an object from a position to another can be represented as a difference between two points in the world coordinate system or as a graph path (each node represents a zone of the world).
+This module is described on figure \ref{fig:krl}, which is self-explanatory. All instances of objects in the KRL have their counterpart in the scene graph. Such a couple defines a Semantic Entity (SE). A mediator module allows to synchronize different representations of the same SE for different modules. For example, a transition of an object from a position to another can be represented as a difference between two points in the world coordinate system or as a graph path (each node represents a zone of the world).
 
-In our example, the KRL allows the other modules to know what interaction are possible with a wheel, with which speech and gesture command, and the meaning of such a gesture or sentence.
+In our example, the KRL allows the other modules to know what interactions are possible with a wheel and with what speech and gesture command.
 
-\section{Recognition module}
+\subsection{Recognition module}
 
 The intuition of the recognition module working is to sequentially analyse the user actions (including speech and gestures) step by step, while setting up the resulting action. When the users actions were entirely analysed, the resulting system action is considered to be completely defined and so it is performed.
 
@@ -82,13 +82,13 @@ We can take the use-case defined in section \ref{sec:overview} in order to illus
 
 \paragraph{"Turn..."} The system "understands" that it will have to perform a rotation and as a consequence sets up a Rotation Action. This Action is characterized by an object to rotate, an axis and an angle, which remain unknowns for now.
 
-\paragraph{pointing gesture} The object to rotate is located in the direction pointed by the user. As there can be many different objects in this direction, the indications are insufficient for now.
+\paragraph{Pointing gesture} The object to rotate is located in the direction pointed by the user. As there can be many different objects in this direction, the indications are insufficient for now.
 
 \paragraph{"... the wheel..."} The object is a wheel. The system can now gather the information and use the fact that the direction is known in order to determine which wheel is pointed.
 
 \paragraph{"... like this."} The system prepares now to recognize a movement description. As the awaited movement is a rotation, it will now await an action allowing to define an axis and an angle.
 
-\paragraph{rotation gesture} From the gesture, the system can retrieve the angle and the axis.
+\paragraph{Rotation gesture} From the gesture, the system can retrieve the angle and the axis.
 \\
 \\
 The formal way to implement this intuition is to use a graph structure (as it is done in the tATN module). An example is given on figure \ref{fig:tATN}. The edges are associated to a transition condition (a detected action of the user), guarding a system action (its reaction to the user action, as depicted in the intuition). The nodes don't have a semantic signification, but they can be interpreted as the states of the system control variables used in order to set up the resulting action.
@@ -100,5 +100,9 @@ A system action can require a call to a function of the PrOSA module, like a pre
 \includegraphics[width=0.75\textwidth]{res/tATN.png}
 \caption{\label{fig:tATN}tATN module.}
 \end{figure}
+
+\section{Review}
+
+Although the goal of this paper is obviously not to test a method but to present a tool, some evaluation would be appreciated.
 
 \end{document}
