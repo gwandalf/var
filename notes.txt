@@ -1,0 +1,8 @@
+interesting references :
+	2 interaction description genesis : 4, 14, 25, 8, 21
+	4 description with a gesture : 3, 6, 20, 7
+	3 usage of speech : 31, 2, 15
+	- Virtual Human (its interpretation) : 27, 23
+	- (very) technical aspects : 1, 5, 28, 13
+	- tools : 26, 29
+	1 multimodality : 4, 22, 14, 10, 12, 11, 30, 19
