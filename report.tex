@@ -95,7 +95,7 @@ The formal way to implement this intuition is to use a graph structure (as it is
 
 The node \textit{R42} is in fact a motion modificator or manipulator of the PrOSA module (see figure \ref{fig:PrOSA}), shared with the tATN module. It corresponds to the state in which the wheel rotates following the hand movement. Hence, the command is special because the rotation gesture and the feedback, i.e the rotating wheel, must be executed at the same time. It illustrates the fact that the gesture processing and the interpretation have to be coupled when a continuous feedback is needed. In the opposite case, the interpretation of the gesture could occur too late, because the simulation loop would have to alternate the interpretation of gestures, stored in a buffer for example, and the resulting executions.
 
-Other coupling are used. For instance, a system action can require a call to a function of the PrOSA module, like a predicate linked to the histories, in order to know if the user was facing a particular object for example. Calls can be triggered to the KRL too, in order to know what actions are possible on a wheel for instance.
+Other coupling are used. For instance, a system action can require a call to a function of the PrOSA module, like a predicate linked to the histories, in order to know if the user was facing a particular object for example. The PrOSA module itself can call the tATN module in order to know if a gesture must be interpreted as a special command. Calls can be triggered from the tATN to the KRL too, in order to know what actions are possible on a wheel for instance.
 
 \begin{figure}
 \centering
