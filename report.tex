@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{url}
 
 \title{Your Paper}
 
@@ -103,19 +104,28 @@ Other coupling are used. For instance, a system action can require a call to a f
 \caption{\label{fig:tATN}tATN module.}
 \end{figure}
 
-\section{Evolution}
-\label{sec:evolution}
+\section{Brought improvements}
+
+\subsection{Context}
 The first system introducing multimodality for interaction with a VE is described in \cite{putthatthere}. Its principle is very simple since the objects with which the user can interact are all of the same nature and are displayed on a 2D screen to which the user can point. The paper uses as an example geometrical forms, but we can obviously extend the principle to other objects, like diagrams components for instance. A finite set of possible actions are defined in the system: creation of a form, deletion, motion, modification of the shape and color and renaming. They are triggered by a corresponding English verb that must be said at the beginning of a sentence. For example, \textit{"Move the red circle to the right of that"} triggers a move. The system identifies the form to move thanks to its description, \textit{"the red circle"}. In order to identify what form is referenced by the word \textit{"that"}, the system uses the point of the screen pointed by the user when the word is uttered.
 
 It is similar to the system presented in the current paper, in the sense that the speech is considered as a command. In both cases, the human language is processed as a computer language, with a grammar system. Indeed, the graph structure described in section \ref{subsec:recognition} is nothing less than a grammar analyser coupled with an interpreter.
 
-Obviously, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language. Moreover, it solves a problem mentioned in \cite{putthatthere}: when the user wants to rename a form, he has to pause for an instant before uttering the new name of the object, like in the sentence \textit{"Call that... the companion cube"}. This delay time is necessary for the system to switch from the speech recognition mode to the training mode (for the learning of the name "companion cube"). In the current system, such a switching of context is not necessary because the tATN module has only to call one of its own functions in order to learn new utterances. Here, a module is viewed as an object providing several demand services, not as a process needing to operate context changes.
+\subsection{New interacting possibilities}
+\label{subsec:possibilities}
+In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
 
-Obviously, it must be recall that \cite{putthatthere} was published in 1980 and that the systems speed has increased since then. However, the "change of context" problem remains actual. The proposed modularity solves this type of issue and so proves its interest.
+
+
+\subsection{Shorten delays}
+\label{subsec:delays}
+It is hard to make comparisons between this system an others in terms of delays because of the absence of any evaluation. Although the goal of this paper is obviously not to test a method but to present a tool, some evaluation would have been appreciated. Still, some assumptions can be made, considering that the enhancements claimed by the author are actual.
+
+The current presented system solves a problem mentioned in \cite{putthatthere}: when the user wants to rename a form, he has to pause for an instant before uttering the new name of the object, like in the sentence \textit{"Call that... the companion cube"}. This delay time is necessary for the system to switch from the speech recognition mode to the training mode (for the learning of the name "companion cube"). In the current system, such a switching of context is not necessary because the KRL module allows to define the possible interaction "Recall" on some objects, parametrized with specific utterances. Here, a simple use of the object-centered concept avoids such delays. Obviously, it must be recall that \cite{putthatthere} was published in 1980 and that the systems speed has increased since then. However, the "change of context" problem remains actual. The proposed modularity solves this type of issue and so proves its interest.
+
+As a direct consequence of what is said in section \ref{subsec:possibilities} about message based communication between the modules of the architecture presented in \cite{kaiser}, one can expect reduced delays between the ending of a gesture or sentence utterance and the visual feedback. The delay presented in \cite{kaiser} of 1.1 seconds in average is not high but perceptible and more importantly can make the user feel that he doesn't really interact with the manipulated object, as stated in \cite{responsetime}. It excludes the integration of continuous feedback, i.e performed at the same time than the gesture, like in our first example of the rotating wheel.
 
 \section{Review}
-
-Although the goal of this paper is obviously not to test a method but to present a tool, some evaluation would be appreciated.
 
 \subsection{Immersion impression}
 The paper has the main benefit of developing the concept of post-WIMP interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a fundamental idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage shouldn't be deprecated.
@@ -123,13 +133,15 @@ The paper has the main benefit of developing the concept of post-WIMP interfaces
 In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feels more involved in the task, as it is claimed in \cite{eutap}. 
 
 \subsection{Tight coupling}
-The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{sec:evolution}. However, it brings also too many dependencies between the modules and as a result affects the re-usability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
+The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{subsec:delays}. However, it brings also too many dependencies between the modules and as a result affects the re-usability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
 
 \begin{thebibliography}{1}
 	\bibitem{putthatthere} BOLT, Richard A. \textit{“Put-that-there”: Voice and gesture at the graphics interface.} ACM, 1980.
 	\bibitem{hcii} LATOSCHIK, Marc Erich et FISCHBACH, Martin. \textit{Engineering Variance: Software Techniques for Scalable, Customizable, and Reusable Multimodal Processing.}
 	\bibitem{avatars} LOPEZ, Thomas, BOUVILLE, Rozenn, LOUP-ESCANDE, Emilie, et al. \textit{Exchange of avatars: Toward a better perception and understanding. Visualization and Computer Graphics, IEEE Transactions on}, 2014, vol. 20, no 4, p. 644-653.
 	\bibitem{eutap} HEGARTY, Rosaleen, CONLON, Sonya, et BLYTH, Elijah. European Union Training Application (EU Tap).
+	\bibitem{kaiser} KAISER, Ed, OLWAL, Alex, MCGEE, David, et al. Mutual disambiguation of 3D multimodal interaction in augmented and virtual reality. In : Proceedings of the 5th international conference on Multimodal interfaces. ACM, 2003. p. 12-19.
+	\bibitem{responsetime} Nielsen Norman Group, \textit{Response time limits} [online]. Access: \url{http://www.nngroup.com/articles/response-times-3-important-limits/}. [Accessed: 1st of January, 2015].
 \end{thebibliography}
 
 \end{document}
