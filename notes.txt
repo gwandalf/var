@@ -6,3 +6,10 @@ interesting references :
 	- (very) technical aspects : 1, 5, 28, 13
 	- tools : 26, 29
 	1 multimodality : 4, 22, 14, 10, 12, 11, 30, 19
+
+interests of the paper in the litterature:
+	concept:
+		eutap : post-WIMP (just consider the one citation)
+		
+	methods:
+		hcii : tight coupling between gesture processing and execution scheme (PrOSA & tATN) because of function calls. The 
