@@ -113,9 +113,16 @@ It is similar to the system presented in the current paper, in the sense that th
 
 \subsection{New interacting possibilities}
 \label{subsec:possibilities}
+
+\begin{figure}
+\centering
+\includegraphics[width=1.25\textwidth]{res/kaiser_architecture.png}
+\caption{\label{fig:kaiser}Architecture presented in \cite{kaiser}.}
+\end{figure}
+
 In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
 
-
+Gesture processing and execution of commands being highly coupled, it is possible to provide continuous feedback, i.e performed at the same time than the gesture, like in our first example of the rotating wheel. It is one of the main enhancements brought by the system. In comparison, a former architecture presented at figure \ref{fig:kaiser}, still young when the paper was published\footnote{respective years of publication: 2003 and 2005}, presented a complete decoupling between the gesture processing and the multimodal integration. Indeed, the message passing system form a closed loop where the gestures and utterances transit as a command flow, interpreted when the next involved module is ready. It introduces delays that are not compatible with continuous feedback. As a matter of fact, the examples of interactions reported in \cite{kaiser} show users imitating a motion (e.g, rotation) for the object to move as a consequence of the complete gesture but never show users controlling motions "online".
 
 \subsection{Shorten delays}
 \label{subsec:delays}
@@ -123,7 +130,7 @@ It is hard to make comparisons between this system an others in terms of delays 
 
 The current presented system solves a problem mentioned in \cite{putthatthere}: when the user wants to rename a form, he has to pause for an instant before uttering the new name of the object, like in the sentence \textit{"Call that... the companion cube"}. This delay time is necessary for the system to switch from the speech recognition mode to the training mode (for the learning of the name "companion cube"). In the current system, such a switching of context is not necessary because the KRL module allows to define the possible interaction "Recall" on some objects, parametrized with specific utterances. Here, a simple use of the object-centered concept avoids such delays. Obviously, it must be recall that \cite{putthatthere} was published in 1980 and that the systems speed has increased since then. However, the "change of context" problem remains actual. The proposed modularity solves this type of issue and so proves its interest.
 
-As a direct consequence of what is said in section \ref{subsec:possibilities} about message based communication between the modules of the architecture presented in \cite{kaiser}, one can expect reduced delays between the ending of a gesture or sentence utterance and the visual feedback. The delay presented in \cite{kaiser} of 1.1 seconds in average is not high but perceptible and more importantly can make the user feel that he doesn't really interact with the manipulated object, as stated in \cite{responsetime}. It excludes the integration of continuous feedback, i.e performed at the same time than the gesture, like in our first example of the rotating wheel.
+As a direct consequence of what is said in section \ref{subsec:possibilities} about message based communication between the modules of the architecture presented in \cite{kaiser}, one can expect reduced delays between the ending of a gesture or sentence utterance and the visual feedback. The delay presented in \cite{kaiser} of 1.1 seconds in average is not high but perceptible and more importantly can make the user feel that he doesn't really interact with the manipulated object, as stated in \cite{responsetime}. It excludes the integration of continuous feedback.
 
 \section{Review}
 
