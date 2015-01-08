@@ -134,7 +134,18 @@ As a direct consequence of what is said in section \ref{subsec:possibilities} ab
 
 \subsection{Multimodal input fusion}
 
-The Multimodal Integration module is finite-state based. 
+The Multimodal Integration module is finite-state based. This approach was first introduced in \cite{state-based}. It presents how multimodal interactions composed of gestures and voice can be processed by a context-free grammar, that can be represented as a graph where conditions guard the transitions and corresponding actions, in the same way than it is presented in section \ref{subsec:recognition}. The conditions are in fact composed of two elements: a gesture and a word command, possibly empty. The tATN can be also specified this way. Such a graph is called a finite-state transducer (FST).
+
+The main conccurent approach is unification-based. It consists in...
+
+The advantages of the state-based approach are...
+
+When a multimodal command is executed, the graph is first "constrained" by the gesture sequence: first, all the translations are filtered by the gesture sequence, in order to guide the speech recognition. More formally, the transducer translation function is $\tau:(G \leftarrow S) \leftarrow M$, where $G$ is the gesture set, $S$ is the word command set and $M$ is the action set. This results on the definition of a transducer representing the relation between $G$ and $S$. Then, the resulting multimodal command processing steps are:
+\begin{enumerate}
+	\item ...
+\end{enumerate}
+%(insert a figure or two)
+However, the proposed processing in the current paper differs from the previous one in the sense that...(timestamp allowing..., integration of more complex gestures thanks to the PrOSA module, description of more complex objects thanks to the KRL module).
 
 \section{Review}
 
@@ -153,6 +164,7 @@ The coupling of the modules, due to possible function calls between the tATN mod
 	\bibitem{eutap} HEGARTY, Rosaleen, CONLON, Sonya, et BLYTH, Elijah. European Union Training Application (EU Tap).
 	\bibitem{kaiser} KAISER, Ed, OLWAL, Alex, MCGEE, David, et al. Mutual disambiguation of 3D multimodal interaction in augmented and virtual reality. In : Proceedings of the 5th international conference on Multimodal interfaces. ACM, 2003. p. 12-19.
 	\bibitem{responsetime} Nielsen Norman Group, \textit{Response time limits} [online]. Access: \url{http://www.nngroup.com/articles/response-times-3-important-limits/}. [Accessed: 1st of January, 2015].
+	\bibitem{state-based} JOHNSTON, Michael et BANGALORE, Srinivas. Finite-state multimodal parsing and understanding. In : \textit{Proceedings of the 18th conference on Computational linguistics-Volume 1}. Association for Computational Linguistics, 2000. p. 369-375.
 \end{thebibliography}
 
 \end{document}
