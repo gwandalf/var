@@ -1,0 +1,24 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Multimodality}{2}
+\contentsline {subsection}{\numberline {1.1}Context}{2}
+\contentsline {subsection}{\numberline {1.2}Immersion impression}{2}
+\contentsline {section}{\numberline {2}Abstract of the paper}{2}
+\contentsline {subsection}{\numberline {2.1}Overview of the system}{3}
+\contentsline {subsection}{\numberline {2.2}Gesture processing}{4}
+\contentsline {paragraph}{Actuators}{4}
+\contentsline {paragraph}{Histories}{4}
+\contentsline {paragraph}{Raters}{5}
+\contentsline {subsection}{\numberline {2.3}Knowledge Representation Layer}{5}
+\contentsline {subsection}{\numberline {2.4}Multimodal integration module}{5}
+\contentsline {paragraph}{"Turn..."}{5}
+\contentsline {paragraph}{Pointing gesture}{5}
+\contentsline {paragraph}{"... the wheel..."}{6}
+\contentsline {paragraph}{"... like this."}{6}
+\contentsline {paragraph}{Rotation gesture}{6}
+\contentsline {section}{\numberline {3}Tight coupling interests}{6}
+\contentsline {subsection}{\numberline {3.1}New interaction possibilities}{6}
+\contentsline {subsection}{\numberline {3.2}Shorten delays}{8}
+\contentsline {subsection}{\numberline {3.3}Implementation concerns}{8}
+\contentsline {section}{\numberline {4}Multimodal input fusion}{9}
+\contentsline {subsection}{\numberline {4.1}The Unification-based approach in a nutshell}{9}
+\contentsline {subsection}{\numberline {4.2}Continuous integration with the State-based approach}{10}
