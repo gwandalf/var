@@ -134,9 +134,21 @@ As a direct consequence of what is said in section \ref{subsec:possibilities} ab
 
 \subsection{Multimodal input fusion}
 
-The Multimodal Integration module is finite-state based. This approach was first introduced in \cite{state-based}. It presents how multimodal interactions composed of gestures and voice can be processed by a context-free grammar, that can be represented as a graph where conditions guard the transitions and corresponding actions, in the same way than it is presented in section \ref{subsec:recognition}. The conditions are in fact composed of two elements: a gesture and a word command, possibly empty. The tATN can be also specified this way. Such a graph is called a finite-state transducer (FST).
+The Multimodal Integration module is finite-state based. This approach was first introduced in \cite{state-based}. It presents how multimodal interactions composed of gestures and voice can be processed by a context-free grammar, that can be represented as a graph where conditions guard the transitions and corresponding actions, in the same way than it is presented in section \ref{subsec:recognition}. The conditions are in fact composed of two elements: a gesture and a word command, possibly empty. Such a graph is called a finite-state transducer (FST).
 
-The main conccurent approach is unification-based. It consists in...
+The main concurrent approach is unification-based. It was purposed by Johnson in \cite{unification-based}. It consists in a system of typed structures. Each structure represents a gesture or a spoken sentence. They own typed fields that define some information. The main feature informs about the content of the gesture or sentence, for example the content of a sentence can be a create command defined by the object it creates and the location of the creation.
+
+The incoming gestures and utterances are stored following this formalism. A complete command is composed of a sentence which states the command type (e.g, "create a wheel") and of a sequence of gestures that give the parameters of the command (e.g, a pointing gesture give the location of a creation command). Hence, the commands can be viewed as rules of the form $Command \rightarrow sentence$ $gesture_1$ $...$ $gesture_n$ (in \cite{unification-based} the formalisms are more complex but it was intentionally simplified for the sake of clarity). Note that the left part of the rule is also a featured structure for which the features are primarily unknown. A system of constraints is used in order to unify the missing values with the value of the features of the elements at the right part of the rule. The following simplified example illustrates this operation:
+
+\begin{itemize}
+	\item $Command = \lbrace content: C \rbrace$ 
+	\item $sentence = \lbrace type: translation, content: \lbrace object: wheel, location: line[P_1, P_2] \rbrace\rbrace$
+	\item $gesture_1 = \lbrace type: point, content: \lbrace location: p_1 \rbrace\rbrace$
+	\item $gesture_2 = \lbrace type: point, content: \lbrace location: p_2 \rbrace\rbrace$
+	\item $constraints = \lbrace C := sentence.content, P_1 := p_1, P_2 := p2 \rbrace$
+\end{itemize}
+
+Obviously, the constraint system can be more complex and need a constraints solver. When the unification is complete, the command can be triggered.
 
 The advantages of the state-based approach are...
 
@@ -165,6 +177,7 @@ The coupling of the modules, due to possible function calls between the tATN mod
 	\bibitem{kaiser} KAISER, Ed, OLWAL, Alex, MCGEE, David, et al. Mutual disambiguation of 3D multimodal interaction in augmented and virtual reality. In : Proceedings of the 5th international conference on Multimodal interfaces. ACM, 2003. p. 12-19.
 	\bibitem{responsetime} Nielsen Norman Group, \textit{Response time limits} [online]. Access: \url{http://www.nngroup.com/articles/response-times-3-important-limits/}. [Accessed: 1st of January, 2015].
 	\bibitem{state-based} JOHNSTON, Michael et BANGALORE, Srinivas. Finite-state multimodal parsing and understanding. In : \textit{Proceedings of the 18th conference on Computational linguistics-Volume 1}. Association for Computational Linguistics, 2000. p. 369-375.
+	\bibitem{unification-based} JOHNSTON, Michael. Unification-based multimodal parsing. In : \textit{Proceedings of the 36th Annual Meeting of the Association for Computational Linguistics and 17th International Conference on Computational Linguistics-Volume 1}. Association for Computational Linguistics, 1998. p. 624-630.
 \end{thebibliography}
 
 \end{document}
