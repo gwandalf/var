@@ -33,29 +33,27 @@ For the interactions to have effects, the objects of the scene must be reference
 
 Several formalisms are described in the literature in order to implement these functionalities. They all tend to reduce the delays between the command performing and the effects, which include feedback, as well as to allow the users to perform more and more natural commands, with more and more possible interactions. However, the modules themselves are not sufficient in order to reach these goals. Their interconnections are crucial and can significantly make the difference between two systems using similar formalisms. Hence, all entities represented on figure \ref{fig:principle} must be taken into account in order to design an efficient architecture allowing a pleasant immersive experience in a VE.
 
-\begin{figure}
+\begin{figure}[!h]
 \centering
 \includegraphics[width=1\textwidth]{res/principle.png}
 \caption{\label{fig:principle}Outline diagram.}
 \end{figure}
 
-The reference paper \cite{latoschik} focus on the framework, delimited by a dashed rectangle on the figure \ref{fig:principle}. It propose highly coupled multimodal processing modules as well as an object oriented knowledge base featured for AIs as the object database. "Highly coupled modules" means that they have direct function access to each other and even share some structures, in opposition to other approaches which define clearly delimited modules communicating thanks to a message passing system. The current report will show how it allows to reduce delays and to perform more natural and pleasant interactions.
+The reference paper \cite{latoschik} focus on the framework, delimited by a dashed rectangle on the figure \ref{fig:principle}. It propose highly coupled multimodal processing modules as well as an object oriented knowledge base featured for AIs as the object database. "Highly coupled modules" means that they have direct function access to each other and even share some structures, in opposition to other approaches which define clearly delimited modules communicating thanks to a message passing system. The current report will show how it allows to reduce delays and to perform more natural and pleasant interactions. The usable modalities are speech and gestures.
 
 A first part will give a short introduction to the state-of-the-art of Multimodality and will explain its main interests. Then, the architecture of \cite{latoschik} will be presented and explained. This will allow to discuss about the brought improvements. This part will focus on the tight coupling interests and the Multimodal integration.
 
-\section{Multimodality}
+\section{Multimodality in VR applications}
 
 \subsection{Context}
 The first system introducing multimodality for interaction with a VE is described in \cite{putthatthere}. Its principle is very simple since the objects with which the user can interact are all of the same nature and are displayed on a 2D screen to which the user can point. The paper uses as an example geometrical forms, but we can obviously extend the principle to other objects, like diagrams components for instance. A finite set of possible actions are defined in the system: creation of a form, deletion, motion, modification of the shape and color and renaming. They are triggered by a corresponding English verb that must be said at the beginning of a sentence. For example, \textit{"Move the red circle to the right of that"} triggers a move. The system identifies the form to move thanks to its description, \textit{"the red circle"}. In order to identify what form is referenced by the word \textit{"that"}, the system uses the point of the screen pointed by the user when the word is uttered.
 
-It is similar to the system presented in the current paper, in the sense that the speech is considered as a command. In both cases, the human language is processed as a computer language, with a grammar system. Indeed, the graph structure described in section \ref{subsec:recognition} is nothing less than a grammar analyser coupled with an interpreter.
+Some of the first remarkable results with 3D applications were obtained by Lucente et Al. and are reported in \cite{lucente}. They realize basic multimodal interaction, like dragging or resizing of virtual objects. In particular, these two interactions provide a continuous feedback to the user. This is possible thanks to the simplicity of the interactions, where user position regular access is sufficient. Nevertheless, continuous feedback was more difficult to obtain when multimodal interactions became more complex, and the virtual environments more demanding in terms of resources. The framework presented in this report gives a solution to this issue.
 
-In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
+\subsection{Immersive impression importance}
+Multimodality has the main benefit of developing the concept of post-WIMP interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a fundamental idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage shouldn't be deprecated.
 
-\subsection{Immersion impression}
-The paper has the main benefit of developing the concept of post-WIMP interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a fundamental idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage shouldn't be deprecated.
-
-In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feel more involved in the task, as it is claimed in \cite{eutap}. 
+In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feel more involved in the task, as it is claimed in \cite{eutap}. As stated in \cite{lucente}, good multimodal interactions have the advantage to be intuitive and should naturally come the human mind without needing to read a user manual.
 
 \section{Abstract of the paper}
 
@@ -136,6 +134,10 @@ The node \textit{R42} is in fact a motion-modificator or manipulator of the PrOS
 
 Other coupling are used. For instance, a system action can require a call to a function of the PrOSA module, like a predicate linked to the histories, in order to know if the user was facing a particular object for example. The PrOSA module itself can call the tATN module in order to know if a gesture must be interpreted as a special command. Calls can be triggered from the tATN to the KRL too, in order to know what actions are possible on a wheel for instance.
 
+The human language is processed as a computer language, with a grammar system. Indeed, the graph structure described above is nothing less than a grammar analyser coupled with an interpreter.
+
+In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
+
 \begin{figure}
 \centering
 \includegraphics[width=0.75\textwidth]{res/tATN.png}
@@ -166,7 +168,7 @@ As a direct consequence of what is said in section \ref{subsec:possibilities} ab
 \subsection{Implementation concerns}
 The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{subsec:delays}. However, it brings also too many dependencies between the modules and as a result affects the re-usability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
 
-\section{Multimodal input fusion}
+\section{Multimodal integration}
 
 The Multimodal Integration module is finite-state based, thanks to its representation as a graph. The main concurrent kind of approaches are said unification-based.
 
@@ -200,7 +202,7 @@ In this report, a framework for multimodal interaction in an immersive VE was pr
 
 This framework is well accepted by the majority of the researchers. However, other approaches were proposed after the publication of this paper, such as MUMIF \cite{mumif} which is unification-based, but is destined to 2D applications not requiring continuous feedback. In the field of VR applications the presented framework is still a reference. The only real drawback that was reported is that such a tight coupling can result in not reusable code. Nevertheless, M.E. Latoschik gives some advices and solutions in \cite{hcii}.
 
-
+%opening ?
 
 \begin{thebibliography}{1}
 	\bibitem{latoschik} LATOSCHIK, Marc Erich. A user interface framework for multimodal VR interactions. In : \textit{Proceedings of the 7th international conference on Multimodal interfaces}. ACM, 2005. p. 76-83.
@@ -214,6 +216,7 @@ This framework is well accepted by the majority of the researchers. However, oth
 	\bibitem{unification-based} JOHNSTON, Michael. Unification-based multimodal parsing. In : \textit{Proceedings of the 36th Annual Meeting of the Association for Computational Linguistics and 17th International Conference on Computational Linguistics-Volume 1}. Association for Computational Linguistics, 1998. p. 624-630.
 	\bibitem{krl} LATOSCHIK, Marc Erich et SCHILLING, Malte. Incorporating VR Databases into AI Knowledge Representations: A Framework for Intelligent Graphics Applications. In : \textit{Computer Graphics and Imaging}. 2003. p. 79-84.
 	\bibitem{mumif} SUN, Yong, CHEN, Fang, SHI, Yu David, et al. A novel method for multi-sensory data fusion in multimodal human computer interaction. In : \textit{Proceedings of the 18th Australia conference on Computer-Human Interaction: Design: Activities, Artefacts and Environments}. ACM, 2006. p. 401-404.
+	\bibitem{lucente} LUCENTE, Mark, ZWART, Gert-Jan, et GEORGE, Andrew D. Visualization space: A testbed for deviceless multimodal user interface. \textit{Intelligent Environments}, 1998, vol. 98, p. 87-92.
 \end{thebibliography}
 
 \end{document}
