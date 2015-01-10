@@ -126,7 +126,7 @@ Gesture processing and execution of commands being highly coupled, it is possibl
 
 \subsection{Shorten delays}
 \label{subsec:delays}
-It is hard to make comparisons between this system an others in terms of delays because of the absence of any evaluation. Although the goal of this paper is obviously not to test a method but to present a tool, some evaluation would have been appreciated. Still, some assumptions can be made, considering that the enhancements claimed by the author are actual.
+It is hard to make comparisons between this system and others in terms of delays because of the absence of any evaluation. Although the goal of this paper is obviously not to test a method but to present a tool, some evaluation would have been appreciated. Still, some assumptions can be made, considering that the enhancements claimed by the author are actual.
 
 The current presented system solves a problem mentioned in \cite{putthatthere}: when the user wants to rename a form, he has to pause for an instant before uttering the new name of the object, like in the sentence \textit{"Call that... the companion cube"}. This delay time is necessary for the system to switch from the speech recognition mode to the training mode (for the learning of the name "companion cube"). In the current system, such a switching of context is not necessary because the KRL module allows to define the possible interaction "Recall" on some objects, parametrized with specific utterances. Here, a simple use of the object-centered concept avoids such delays. Obviously, it must be recall that \cite{putthatthere} was published in 1980 and that the systems speed has increased since then. However, the "change of context" problem remains actual. The proposed modularity solves this type of issue and so proves its interest.
 
@@ -134,9 +134,10 @@ As a direct consequence of what is said in section \ref{subsec:possibilities} ab
 
 \subsection{Multimodal input fusion}
 
-The Multimodal Integration module is finite-state based. This approach was first introduced in \cite{state-based}. It presents how multimodal interactions composed of gestures and voice can be processed by a context-free grammar, that can be represented as a graph where conditions guard the transitions and corresponding actions, in the same way than it is presented in section \ref{subsec:recognition}. The conditions are in fact composed of two elements: a gesture and a word command, possibly empty. Such a graph is called a finite-state transducer (FST).
+The Multimodal Integration module is finite-state based, thanks to its representation as a graph. The main concurrent kind of approaches are said unification-based.
 
-The main concurrent approach is unification-based. It was purposed by Johnson in \cite{unification-based}. It consists in a system of typed structures. Each structure represents a gesture or a spoken sentence. They own typed fields that define some information. The main feature informs about the content of the gesture or sentence, for example the content of a sentence can be a create command defined by the object it creates and the location of the creation.
+\subsubsection{The Unification-based approach in a nutshell}
+It was purposed by Johnson in \cite{unification-based}. It consists in a system of typed structures. Each structure represents a gesture or a spoken sentence. They own typed fields that define some information. The main feature informs about the content of the gesture or sentence, for example the content of a sentence can be a create command defined by the object it creates and the location of the creation.
 
 The incoming gestures and utterances are stored following this formalism. A complete command is composed of a sentence which states the command type (e.g, "create a wheel") and of a sequence of gestures that give the parameters of the command (e.g, a pointing gesture give the location of a creation command). Hence, the commands can be viewed as rules of the form $Command \rightarrow sentence$ $gesture_1$ $...$ $gesture_n$ (in \cite{unification-based} the formalisms are more complex but it was intentionally simplified for the sake of clarity). Note that the left part of the rule is also a featured structure for which the features are primarily unknown. A system of constraints is used in order to unify the missing values with the value of the features of the elements at the right part of the rule. The following simplified example illustrates this operation:
 
@@ -150,14 +151,16 @@ The incoming gestures and utterances are stored following this formalism. A comp
 
 Obviously, the constraint system can be more complex and need a constraints solver. When the unification is complete, the command can be triggered.
 
-The advantages of the state-based approach are...
+This system has the advantage to be very simple to implement. A large class of rules can be designed with constraints. Nevertheless, the input gestures and utterances have to be parsed and assigned to typed feature structures, what can generate errors of interpretation. That is why a list of possible structures is created for each input modality. The executed command is then the one which is generated by the best combination of inputs, with respect to probabilistic considerations. The operation is complex and makes continuous commands (e.g, the rotating wheel) impossible: such commands would require a delay after the generation of the list of best possible commands in order to wait for an hypothetical incoming gesture, at the expense of other commands ready to be executed. As commands can be executed only when all of their components were performed, continuous feedback is impossible. Moreover, generating the list of the possible combinations has an exponential complexity in the worst case, as stated by Johnson in \cite{state-based}.
 
-When a multimodal command is executed, the graph is first "constrained" by the gesture sequence: first, all the translations are filtered by the gesture sequence, in order to guide the speech recognition. More formally, the transducer translation function is $\tau:(G \leftarrow S) \leftarrow M$, where $G$ is the gesture set, $S$ is the word command set and $M$ is the action set. This results on the definition of a transducer representing the relation between $G$ and $S$. Then, the resulting multimodal command processing steps are:
-\begin{enumerate}
-	\item ...
-\end{enumerate}
-%(insert a figure or two)
-However, the proposed processing in the current paper differs from the previous one in the sense that...(timestamp allowing..., integration of more complex gestures thanks to the PrOSA module, description of more complex objects thanks to the KRL module).
+\subsubsection{Continuous integration with the state-based approach}
+This approach was first introduced in \cite{state-based}. It presents how multimodal interactions composed of gestures and voice can be processed by a context-free grammar, that can be represented as a graph where conditions guard the transitions and corresponding actions, in the same way than it is presented in section \ref{subsec:recognition}. The conditions are in fact composed of two elements: a gesture and a word command, possibly empty. Such a graph is called a finite-state transducer (FST).
+
+Thanks to the transducers sequential structure, it is possible to integrate continuously the incoming modalities, what is impossible with unification-based approaches. The section \ref{subsec:recognition} explains how it is implemented in the system proposed by Latoschick, thanks to the PrOSA module.
+
+Even if \cite{state-based} clearly specifies the state-based approach, it avoids the question of gesture sequence and utterances synchronization. Indeed, a user can utter a sentence like "Translate the wheel from there to there" without pointing anything and only then perform the gesture sequence (pointing of the wheel and a target point). Without synchronization system, the matching of two consecutive sequences of a different modality is "forced". Hence, commands can be triggered unintentionally. That is why timestamps are needed. They can impose time constraints between gestures and utterances. Such timestamps are introduced in the system proposed by Latoschick. Indeed, the states of the transducer are marked by a timestamp. They allow the guarding conditions to refer to events stored in the histories of the PrOSA module. For example, one of the conditions between the states $O_2$ and $O_3$, $if(overlap(pointing, t))$, constrains a pointing gesture to have occurred at the same time than the reaching of state $O_2$ (at time $t$), that is to say at the beginning of an object description.
+
+%description of more complex objects thanks to the KRL module).
 
 \section{Review}
 
