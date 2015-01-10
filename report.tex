@@ -104,12 +104,21 @@ Other coupling are used. For instance, a system action can require a call to a f
 \caption{\label{fig:tATN}tATN module.}
 \end{figure}
 
-\section{Brought improvements}
+\section{Multimodality}
 
 \subsection{Context}
 The first system introducing multimodality for interaction with a VE is described in \cite{putthatthere}. Its principle is very simple since the objects with which the user can interact are all of the same nature and are displayed on a 2D screen to which the user can point. The paper uses as an example geometrical forms, but we can obviously extend the principle to other objects, like diagrams components for instance. A finite set of possible actions are defined in the system: creation of a form, deletion, motion, modification of the shape and color and renaming. They are triggered by a corresponding English verb that must be said at the beginning of a sentence. For example, \textit{"Move the red circle to the right of that"} triggers a move. The system identifies the form to move thanks to its description, \textit{"the red circle"}. In order to identify what form is referenced by the word \textit{"that"}, the system uses the point of the screen pointed by the user when the word is uttered.
 
 It is similar to the system presented in the current paper, in the sense that the speech is considered as a command. In both cases, the human language is processed as a computer language, with a grammar system. Indeed, the graph structure described in section \ref{subsec:recognition} is nothing less than a grammar analyser coupled with an interpreter.
+
+In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
+
+\subsection{Immersion impression}
+The paper has the main benefit of developing the concept of post-WIMP interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a fundamental idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage shouldn't be deprecated.
+
+In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feel more involved in the task, as it is claimed in \cite{eutap}. 
+
+\section{Tight coupling interests}
 
 \subsection{New interaction possibilities}
 \label{subsec:possibilities}
@@ -119,8 +128,6 @@ It is similar to the system presented in the current paper, in the sense that th
 \includegraphics[width=1.25\textwidth]{res/kaiser_architecture.png}
 \caption{\label{fig:kaiser}Architecture presented in \cite{kaiser}.}
 \end{figure}
-
-In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
 
 Gesture processing and execution of commands being highly coupled, it is possible to provide continuous feedback, i.e performed at the same time than the gesture, like in our first example of the rotating wheel. It is one of the main enhancements brought by the system. In comparison, a former architecture presented at figure \ref{fig:kaiser}, still young when the paper was published\footnote{respective years of publication: 2003 and 2005}, presented a complete decoupling between the gesture processing and the multimodal integration. Indeed, the message passing system form a closed loop where the gestures and utterances transit as a command flow, interpreted when the next involved module is ready. It introduces delays that are not compatible with continuous feedback. As a matter of fact, the examples of interactions reported in \cite{kaiser} show users imitating a motion (e.g, rotation) for the object to move as a consequence of the complete gesture but never show users controlling motions "online".
 
@@ -132,11 +139,14 @@ The current presented system solves a problem mentioned in \cite{putthatthere}: 
 
 As a direct consequence of what is said in section \ref{subsec:possibilities} about message based communication between the modules of the architecture presented in \cite{kaiser}, one can expect reduced delays between the ending of a gesture or sentence utterance and the visual feedback. The delay presented in \cite{kaiser} of 1.1 seconds in average is not high but perceptible and more importantly can make the user feel that he doesn't really interact with the manipulated object, as stated in \cite{responsetime}. It excludes the integration of continuous feedback.
 
-\subsection{Multimodal input fusion}
+\subsection{Implementation concerns}
+The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{subsec:delays}. However, it brings also too many dependencies between the modules and as a result affects the re-usability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
+
+\section{Multimodal input fusion}
 
 The Multimodal Integration module is finite-state based, thanks to its representation as a graph. The main concurrent kind of approaches are said unification-based.
 
-\subsubsection{The Unification-based approach in a nutshell}
+\subsection{The Unification-based approach in a nutshell}
 It was purposed by Johnson in \cite{unification-based}. It consists in a system of typed structures. Each structure represents a gesture or a spoken sentence. They own typed fields that define some information. The main feature informs about the content of the gesture or sentence, for example the content of a sentence can be a create command defined by the object it creates and the location of the creation.
 
 The incoming gestures and utterances are stored following this formalism. A complete command is composed of a sentence which states the command type (e.g, "create a wheel") and of a sequence of gestures that give the parameters of the command (e.g, a pointing gesture give the location of a creation command). Hence, the commands can be viewed as rules of the form $Command \rightarrow sentence$ $gesture_1$ $...$ $gesture_n$ (in \cite{unification-based} the formalisms are more complex but it was intentionally simplified for the sake of clarity). Note that the left part of the rule is also a featured structure for which the features are primarily unknown. A system of constraints is used in order to unify the missing values with the value of the features of the elements at the right part of the rule. The following simplified example illustrates this operation:
@@ -153,7 +163,7 @@ Obviously, the constraint system can be more complex and need a constraints solv
 
 This system has the advantage to be very simple to implement. A large class of rules can be designed with constraints. Nevertheless, the input gestures and utterances have to be parsed and assigned to typed feature structures, what can generate errors of interpretation. That is why a list of possible structures is created for each input modality. The executed command is then the one which is generated by the best combination of inputs, with respect to probabilistic considerations. The operation is complex and makes continuous commands (e.g, the rotating wheel) impossible: such commands would require a delay after the generation of the list of best possible commands in order to wait for an hypothetical incoming gesture, at the expense of other commands ready to be executed. As commands can be executed only when all of their components were performed, continuous feedback is impossible. Moreover, generating the list of the possible combinations has an exponential complexity in the worst case, as stated by Johnson in \cite{state-based}.
 
-\subsubsection{Continuous integration with the state-based approach}
+\subsection{Continuous integration with the State-based approach}
 This approach was first introduced in \cite{state-based}. It presents how multimodal interactions composed of gestures and voice can be processed by a context-free grammar, that can be represented as a graph where conditions guard the transitions and corresponding actions, in the same way than it is presented in section \ref{subsec:recognition}. The conditions are in fact composed of two elements: a gesture and a word command, possibly empty. Such a graph is called a finite-state transducer (FST).
 
 Thanks to the transducers sequential structure, it is possible to integrate continuously the incoming modalities, what is impossible with unification-based approaches. The section \ref{subsec:recognition} explains how it is implemented in the system proposed by Latoschick, thanks to the PrOSA module.
@@ -161,16 +171,6 @@ Thanks to the transducers sequential structure, it is possible to integrate cont
 Even if \cite{state-based} clearly specifies the state-based approach, it avoids the question of gesture sequence and utterances synchronization. Indeed, a user can utter a sentence like "Translate the wheel from there to there" without pointing anything and only then perform the gesture sequence (pointing of the wheel and a target point). Without synchronization system, the matching of two consecutive sequences of a different modality is "forced". Hence, commands can be triggered unintentionally. That is why timestamps are needed. They can impose time constraints between gestures and utterances. Such timestamps are introduced in the system proposed by Latoschick. Indeed, the states of the transducer are marked by a timestamp. They allow the guarding conditions to refer to events stored in the histories of the PrOSA module. For example, one of the conditions between the states $O_2$ and $O_3$, $if(overlap(pointing, t))$, constrains a pointing gesture to have occurred at the same time than the reaching of state $O_2$ (at time $t$), that is to say at the beginning of an object description.
 
 %description of more complex objects thanks to the KRL module).
-
-\section{Review}
-
-\subsection{Immersion impression}
-The paper has the main benefit of developing the concept of post-WIMP interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a fundamental idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage shouldn't be deprecated.
-
-In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feel more involved in the task, as it is claimed in \cite{eutap}. 
-
-\subsection{Tight coupling}
-The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{subsec:delays}. However, it brings also too many dependencies between the modules and as a result affects the re-usability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
 
 \begin{thebibliography}{1}
 	\bibitem{putthatthere} BOLT, Richard A. \textit{“Put-that-there”: Voice and gesture at the graphics interface.} ACM, 1980.
