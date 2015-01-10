@@ -21,6 +21,28 @@ This report presents a user interface framework for multimodal Virtual Reality (
 
 \tableofcontents
 
+\section{Introduction}
+
+Multimodal interactions are actions and feedback between a user and an immersive Virtual Environment (VE) that involve various communication modes, or modalities, like speech, gesture and writing. In particular, triggering a command using several modalities is a complex problem that can be separated in two smaller ones:
+\begin{itemize}
+	\item \textbf{Multimodal parsing:} an input action, like a gesture or an uttered word, has to be identified and formalized internally, as a data structure for example. The information characterizing it must be stored for further processing. For instance, a pointing gesture holds information that can be useful for a command execution, like the pointed object or the performing time.
+	\item \textbf{Multimodal integration/recognition:} when at least a part of an intended command is parsed, a system has to recognize the command, at least partially. When a command is fully recognized and parametrized, it can be executed.
+\end{itemize}
+
+For the interactions to have effects, the objects of the scene must be referenced with their characteristics in a database. The modules assigned to the multimodal parsing and recognition need functional access to this database. The objects characterization is important because it define what interactions are possible. Its organisation must be simple and complete in order to avoid reimplementation for each application, as it is explained in \cite{krl}.
+
+Several formalisms are described in the literature in order to implement these functionalities. They all tend to reduce the delays between the command performing and the effects, which include feedback, as well as to allow the users to perform more and more natural commands, with more and more possible interactions. However, the modules themselves are not sufficient in order to reach these goals. Their interconnections are crucial and can significantly make the difference between two systems using similar formalisms. Hence, all entities represented on figure \ref{fig:principle} must be taken into account in order to design an efficient architecture allowing a pleasant immersive experience in a VE.
+
+\begin{figure}
+\centering
+\includegraphics[width=1\textwidth]{res/principle.png}
+\caption{\label{fig:principle}Outline diagram.}
+\end{figure}
+
+The reference paper \cite{latoschik} focus on the framework, delimited by a dashed rectangle on the figure \ref{fig:principle}. It propose highly coupled multimodal processing modules as well as an object oriented knowledge base featured for AIs as the object database. "Highly coupled modules" means that they have direct function access to each other and even share some structures, in opposition to other approaches which define clearly delimited modules communicating thanks to a message passing system. The current report will show how it allows to reduce delays and to perform more natural and pleasant interactions.
+
+A first part will give a short introduction to the state-of-the-art of Multimodality and will explain its main interests. Then, the architecture of \cite{latoschik} will be presented and explained. This will allow to discuss about the brought improvements. This part will focus on the tight coupling interests and the Multimodal integration.
+
 \section{Multimodality}
 
 \subsection{Context}
@@ -172,6 +194,10 @@ Thanks to the transducers sequential structure, it is possible to integrate cont
 
 Even if \cite{state-based} clearly specifies the state-based approach, it avoids the question of gesture sequence and utterances synchronization. Indeed, a user can utter a sentence like "Translate the wheel from there to there" without pointing anything and only then perform the gesture sequence (pointing of the wheel and a target point). Without synchronization system, the matching of two consecutive sequences of a different modality is "forced". Hence, commands can be triggered unintentionally. That is why timestamps are needed. They can impose time constraints between gestures and utterances. Such timestamps are introduced in the system proposed by Latoschick. Indeed, the states of the transducer are marked by a timestamp. They allow the guarding conditions to refer to events stored in the histories of the PrOSA module. For example, one of the conditions between the states $O_2$ and $O_3$, $if(overlap(pointing, t))$, constrains a pointing gesture to have occurred at the same time than the reaching of state $O_2$ (at time $t$), that is to say at the beginning of an object description.
 
+\section{Conclusion}
+
+In this report, a framework for multimodal interaction in an immersive VE was presented and discussed. It has been shown that highly coupled multimodal parsing and multimodal recognition modules (respectively PrOSA and tATN) can lead to reduced delays between the user command and the feedback. This was possible thanks to a multimodal integration based on a transducer, an automaton where edges are guarded by conditions related to the multimodal commands. The command is progressively built-up when the transitions are activated. Direct access to the multimodal parsing module allow to use histories, which are data structures storing the multimodal parameters, such as the pointed object and coordinates, with respect to the date of execution. Timestamps allow to synchronize the gestures and the speech commands. Continuous commands, that is to say with a feedback following the user movement are made possible mostly thanks to shared states between PrOSA and tATN: the incoming pieces of continuous gesture are directly integrated to the transducer in order for the feedback to continue. 
+
 \begin{thebibliography}{1}
 	\bibitem{latoschik} LATOSCHIK, Marc Erich. A user interface framework for multimodal VR interactions. In : \textit{Proceedings of the 7th international conference on Multimodal interfaces}. ACM, 2005. p. 76-83.
 	\bibitem{putthatthere} BOLT, Richard A. \textit{“Put-that-there”: Voice and gesture at the graphics interface.} ACM, 1980.
@@ -182,6 +208,7 @@ Even if \cite{state-based} clearly specifies the state-based approach, it avoids
 	\bibitem{responsetime} Nielsen Norman Group, \textit{Response time limits} [online]. Access: \url{http://www.nngroup.com/articles/response-times-3-important-limits/}. [Accessed: 1st of January, 2015].
 	\bibitem{state-based} JOHNSTON, Michael et BANGALORE, Srinivas. Finite-state multimodal parsing and understanding. In : \textit{Proceedings of the 18th conference on Computational linguistics-Volume 1}. Association for Computational Linguistics, 2000. p. 369-375.
 	\bibitem{unification-based} JOHNSTON, Michael. Unification-based multimodal parsing. In : \textit{Proceedings of the 36th Annual Meeting of the Association for Computational Linguistics and 17th International Conference on Computational Linguistics-Volume 1}. Association for Computational Linguistics, 1998. p. 624-630.
+	\bibitem{krl} LATOSCHIK, Marc Erich et SCHILLING, Malte. Incorporating VR Databases into AI Knowledge Representations: A Framework for Intelligent Graphics Applications. In : \textit{Computer Graphics and Imaging}. 2003. p. 79-84.
 \end{thebibliography}
 
 \end{document}
