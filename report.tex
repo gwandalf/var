@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 
-\title{Multimodal interaction enhancement thanks to a highly coupled architecture}
+\title{Multimodal interaction processing improvements thanks to a highly coupled architecture}
 
 \author{Gwendal Le Moulec}
 
@@ -16,7 +16,7 @@
 \maketitle
 
 \begin{abstract}
-This report presents a user interface framework for multimodal Virtual Reality (VR) interactions proposed by Latoschik in 2005 \cite{latoschik}. First a quick introduction to multimodality and its interests is made and then the modules composing the framework are presented and explained. It is then shown that the tight coupling of these modules allows great enhancements of the multimodal interaction possibilities, as well as the multimodal integration is made, that is to say how the incoming gesture and speech commands are matched and interpreted. Notable improvements are the possibility to perform commands with a continuous feedback and shorten delays in the integration loop.
+This report presents a user interface framework for multimodal Virtual Reality (VR) interactions proposed by Latoschik in 2005 \cite{latoschik}. First a quick introduction to multimodality and its interests is made and then the modules composing the framework are presented and explained. It is then shown that the tight coupling of these modules allows great enhancements of the multimodal interaction possibilities. Notable improvements are the possibility to perform commands with a continuous feedback and shorten delays in the integration loop.
 \end{abstract}
 
 \tableofcontents
@@ -25,13 +25,13 @@ This report presents a user interface framework for multimodal Virtual Reality (
 
 Multimodal interactions are actions and feedback between a user and an immersive Virtual Environment (VE) that involve various communication modes, or modalities, like speech, gesture and writing. In particular, triggering a command using several modalities is a complex problem that can be separated in two smaller ones:
 \begin{itemize}
-	\item \textbf{Multimodal parsing:} an input action, like a gesture or an uttered word, has to be identified and formalized internally, as a data structure for example. The information characterizing it must be stored for further processing. For instance, a pointing gesture holds information that can be useful for a command execution, like the pointed object or the performing time.
-	\item \textbf{Multimodal integration/recognition:} when at least a part of an intended command is parsed, a system has to recognize the command, at least partially. When a command is fully recognized and parametrized, it can be executed.
+	\item \textbf{Processing of each modality:} an input gesture, spoken word or written symbol has to be identified and formalized internally, as a data structure for example. The information characterizing it must be stored for further processing. For instance, a pointing gesture holds information that can be useful for a command execution, like the pointed object or the performing time.
+	\item \textbf{Multimodal integration/recognition:} when at least a part of an intended command is processed, a system has to recognize the command, at least partially. When a command is fully recognized and parametrized, it can be executed.
 \end{itemize}
 
-For the interactions to have effects, the objects of the scene must be referenced with their characteristics in a database. The modules assigned to the multimodal parsing and recognition need functional access to this database. The objects characterization is important because it define what interactions are possible. Its organisation must be simple and complete in order to avoid reimplementation for each application, as it is explained in \cite{krl}.
+For the interactions to have effect, the objects of the scene must be referenced with their characteristics in a database. The modules assigned to the processing and  the recognition need access to this database. The objects characterization is important because it define what interactions are possible. Its organisation must be simple and complete in order to avoid reimplementation for each application, as it is explained in \cite{krl}.
 
-Several formalisms are described in the literature in order to implement these functionalities. They all tend to reduce the delays between the command performing and the effects, which include feedback, as well as to allow the users to perform more and more natural commands, with more and more possible interactions. However, the modules themselves are not sufficient in order to reach these goals. Their interconnections are crucial and can significantly make the difference between two systems using similar formalisms. Hence, all entities represented on figure \ref{fig:principle} must be taken into account in order to design an efficient architecture allowing a pleasant immersive experience in a VE.
+Several formalisms are described in the literature in order to implement these functionalities. They all tend to reduce the delays between the command performing and the effects, which include feedback, as well as to allow the users to perform more and more natural commands, with more and more possible interactions. However, the modules themselves are not sufficient in order to reach these goals. Their interconnections are crucial and can significantly make the difference between two systems using similar formalisms. Hence, all entities represented in figure \ref{fig:principle} must be taken into account in order to design an efficient architecture allowing a pleasant immersive experience in a VE.
 
 \begin{figure}[!h]
 \centering
@@ -39,32 +39,27 @@ Several formalisms are described in the literature in order to implement these f
 \caption{\label{fig:principle}Outline diagram.}
 \end{figure}
 
-The reference paper \cite{latoschik} focus on the framework, delimited by a dashed rectangle on the figure \ref{fig:principle}. It propose highly coupled multimodal processing modules as well as an object oriented knowledge base featured for AIs as the object database. "Highly coupled modules" means that they have direct function access to each other and even share some structures, in opposition to other approaches which define clearly delimited modules communicating thanks to a message passing system. The current report will show how it allows to reduce delays and to perform more natural and pleasant interactions. The usable modalities are speech and gestures.
+The reference paper \cite{latoschik} focus on the framework, delimited by a dashed rectangle in the figure \ref{fig:principle}. The speech processing is out of the scope of the study, since powerful tools already exist. It propose highly coupled modules as well as an object oriented knowledge base featured for AIs as the object database. "Highly coupled modules" means that they have direct function access to each other and even share some structures, in opposition to other approaches which define clearly delimited modules communicating thanks to a message passing system. The current report will show how it allows to reduce delays and to perform more natural and pleasant interactions. The usable modalities are speech and gesture.
 
-A first part will give a short introduction to the state-of-the-art of Multimodality and will explain its main interests. Then, the architecture of \cite{latoschik} will be presented and explained. This will allow to discuss about the brought improvements. This part will focus on the tight coupling interests and the Multimodal integration.
+A first part will give a short introduction to the state-of-the-art of multimodality for VEs and will explain its main interests. Then, the architecture of \cite{latoschik} will be presented and explained. This will allow to discuss about the brought improvements. This part will focus on the tight coupling interests and the multimodal integration.
 
 \section{Multimodality in VR applications}
 
-\subsection{Context}
-The first system introducing multimodality for interaction with a VE is described in \cite{putthatthere}. Its principle is very simple since the objects with which the user can interact are all of the same nature and are displayed on a 2D screen to which the user can point. The paper uses as an example geometrical forms, but we can obviously extend the principle to other objects, like diagrams components for instance. A finite set of possible actions are defined in the system: creation of a form, deletion, motion, modification of the shape and color and renaming. They are triggered by a corresponding English verb that must be said at the beginning of a sentence. For example, \textit{"Move the red circle to the right of that"} triggers a move. The system identifies the form to move thanks to its description, \textit{"the red circle"}. In order to identify what form is referenced by the word \textit{"that"}, the system uses the point of the screen pointed by the user when the word is uttered.
-
-Some of the first remarkable results with 3D applications were obtained by Lucente et Al. and are reported in \cite{lucente}. They realize basic multimodal interaction, like dragging or resizing of virtual objects. In particular, these two interactions provide a continuous feedback to the user. This is possible thanks to the simplicity of the interactions, where user position regular access is sufficient. Nevertheless, continuous feedback was more difficult to obtain when multimodal interactions became more complex, and the virtual environments more demanding in terms of resources. The framework presented in this report gives a solution to this issue.
-
 \subsection{Immersive impression importance}
-Multimodality has the main benefit of developing the concept of post-WIMP interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a fundamental idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage shouldn't be deprecated.
+Multimodality has the main benefit of developing the concept of post-WIMP\footnote{WIMP: Windows, Icons, Menus and Pointing device.} interfaces, i.e interfaces giving a pleasant impression of immersion to the user. Obviously, post-WIMP is a central idea in VR. Nevertheless, one can distinguish several degrees of immersion for a same interaction. For instance, in \cite{avatars}, the authors compare several ways to show that an exchange of avatars is happening. One of them consists in a simple popup notification whereas another shows ghosts translating between the two avatars. the first metaphor is a kind of WIMP equivalent, while the second one complies with the post-WIMP concept. However, post-WIMP metaphors are not necessarily better than WIMP ones, and the results in \cite{avatars} confirm it. Moreover, button based commands are nowadays widely used (e.g, video game remotes) and cheaper than motion trackers. Therefore, their usage is not out of date.
 
-In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feel more involved in the task, as it is claimed in \cite{eutap}. As stated in \cite{lucente}, good multimodal interactions have the advantage to be intuitive and should naturally come the human mind without needing to read a user manual.
+In training applications, the immersion impression brought by multimodality is fundamental because it is a pleasant way to interact that stimulates the users, who feel more involved in the task, as it is claimed in \cite{eutap}. As stated in \cite{lucente}, good multimodal interactions have the advantage to be intuitive and should naturally come the human mind without the need for the user to read a manual.
+
+\subsection{Context}
+The first system introducing multimodality for interaction with a VE is described in \cite{putthatthere}. Its principle is very simple since the objects with which the user can interact are all of the same nature and are displayed on a 2D screen to which the user can point. The paper uses as an example geometrical forms, but we can obviously extend the principle to other objects, like diagrams components for instance. A finite set of possible actions are defined in the system: creation of a form, deletion, motion, modification of the shape and color and renaming. They are triggered by a corresponding English verb that must be said at the beginning of a sentence. For example, \textit{"Move the red circle to the right of that"} triggers a moving. The system identifies the form to move thanks to its description, \textit{"the red circle"}. In order to identify what form is referenced by the word \textit{"that"}, the system uses the point of the screen pointed by the user when the word is spoken.
+
+Some of the first outstanding results with 3D applications were obtained by Lucente et Al. and are reported in \cite{lucente}. They realize basic multimodal interactions, like dragging or resizing virtual objects. In particular, these two interactions provide a continuous feedback to the user. This is possible thanks to the simplicity of the interactions, for which regular access to the user position is feasible and acceptable. Nevertheless, continuous feedback was more difficult to obtain when multimodal interactions became more complex, and the virtual environments more demanding in terms of resources. That is one of the reasons why researchers had then to design efficient architectures and formalisms. The framework presented in this report proposes a solution.
 
 \section{Abstract of the paper}
+\label{sec:abstract}
+This paper presents a Human Machine multimodal Interface framework for Virtual Environments. The addressed interaction paradigms are based on speech and gesture recognition (multimodal aspect). Its main challenge is to be efficient in a highly interactive context, with an obligation to adapt to real-time. Another requirement is to be an adaptable tool, re-usable, extensible and configurable.
 
-This paper presents a Human Machine multimodal Interface framework for Virtual Environments (VE). The addressed interaction paradigms are based on speech and gesture recognition (multimodal aspect). Its main challenge is to be efficient in a highly interactive context, with an obligation to adapt to real-time. Another requirement is to be an adaptable tool, re-usable, extensible and configurable.
-
-A multimodal interface use recognition methods that must take into account the VE context. For example, in speech recognition, spatial positioning depends on the spatial position of the speaker (\textit{"The left object"} refers to different objects with respect to the user position in the scene). The problem can be solved by implementing a close coupling between the scene representation and the recognition modules. However, such a coupling suffers of 3 main issues (TODO: reformuler après avoir mieux compris l'article):
-\begin{enumerate}
-	\item Sampling rates policies differ between classic speech recognition methods and VR systems.
-	\item De-synchronization between the recognition system and the VE. The recognition process needs information on the current state of the scene and so "waits" for new data, while the systems evolves through another state. There is also a need for former information, not present any more in the current state of the scene.
-	\item The simulation rate can change.
-\end{enumerate}
+A multimodal interface use recognition methods that must take into account the VE context. For example, in speech recognition, spatial positioning depends on the spatial position of the speaker (\textit{"The left object"} refers to different objects with respect to the user position in the scene). The problem can be solved by implementing a close coupling between the scene representation and the recognition modules. However, such a coupling suffers from an issue: the desynchronization between the recognition system and the VE. Indeed, the recognition process needs information on the current state of the scene but lags behind. Moreover, the simulation rate is not constant. Hence, the proposed architecture decouples the scene and all the recognition process.
 
 \subsection{Overview of the system}
 \label{sec:overview}
@@ -74,14 +69,14 @@ A multimodal interface use recognition methods that must take into account the V
 \caption{\label{fig:overview}Architecture of the framework.}
 \end{figure}
 
-The figure \ref{fig:overview} shows an overview of the framework architecture. It includes three main modules: \textit{gesture processing} (PrOSA), \textit{multimodal integration and analysis} (tATN) and \textit{Knowledge Representation Layer} (KRL). Their purpose will be explained in details in the latter sections of the report. However, some generalities can be given here:
+The figure \ref{fig:overview} shows an overview of the framework architecture. It includes three main modules: \textit{gesture processing} (PrOSA\footnote{Patterns On Sequences of Attributes}), \textit{multimodal integration and analysis} (tATN\footnote{temporal Augmented Transition Network}) and \textit{Knowledge Representation Layer} (KRL). Their purpose will be explained in details in the latter sections of the report. However, some generalities can be given here:
 \begin{description}
-	\item[PrOSA:] it uses attribute sequences generated by the scene, interpreting them as gestures. The direct effects on the VE are produced. The recognition processes are performed thanks to function calls to the tATN module.
+	\item[PrOSA:] it uses attribute sequences generated by the scene, interpreting them as gestures. Direct effects on the VE can be produced if no integration as a part of a command is needed (e.g, grabbing an object).
 	\item[tATN:] it interprets multimodal commands and executes them.
 	\item[KRL:] it holds the knowledge about the objects of the scene, their features and their links (e.g, the possible interactions between two objects).
 \end{description}
 
-An example of multimodal command that could be processed by this system is the following use case: a user points a wheel with his hand and says \textit{"Turn the wheel like this"}, while doing the rotation gesture. The behaviour of the system will be explained by showing the processing of this command. A head tracker is used in order to know the face orientation, data gloves are used for the hand tracking and a speech recorder is used for the voice.
+An example of multimodal command that could be processed by this system is the following use case: a user points a wheel with his hand and says \textit{"Turn the wheel like this"}, while doing the rotation gesture. This interaction is continuous: the wheel turns following the user rotation gesture. The behaviour of the system will be explained through the processing of this command. A head tracker is used in order to know the face orientation, data gloves are used for the hand tracking and a speech recorder is used for the voice.
 
 \subsection{Gesture processing}
 
@@ -91,11 +86,17 @@ An example of multimodal command that could be processed by this system is the f
 \caption{\label{fig:PrOSA}Gesture Processing module.}
 \end{figure}
 
-The PrOSA module is composed of various entities which are represented on figure \ref{fig:PrOSA}. The purpose of each component is described below:
+The PrOSA module is composed of various entities which are represented in figure \ref{fig:PrOSA}. The purpose of each component is described below:
 
 \paragraph{Actuators} These are the link between the hardware and software sensors and the PrOSA module. They transform "messy" data\footnote{"Messy" means that data is generated on-the-fly, with any order and with possibly different representations.} coming from the sensors into well organized, normalized data, in form of Attribute Sequences (AS). In other word, they provide to the system entry data with a suitable representation for it. For example, for the use-case given in section \ref{sec:overview}, four actuators are used: one for the voice, another gathers and converts information about the head position and the two lasts gather and convert information coming from the data gloves.
 
-\paragraph{Histories} They consist of a list of sets of measures token at regular intervals of time. For example, a speech history is the list of words said by the actor with respect to the time. A spacemap history will rather describe the evolution of a set of distances of objects to the user and angles with the face direction. The histories are necessary for the multimodal analysis module to process formerly acquired data.
+\paragraph{Histories} They are lists of sets of measures token at regular intervals of time. For example, a spacemap history describes the evolution of a set of distances of objects to the user and angles with the face direction (see figure \ref{fig:histories}). The histories are necessary for the multimodal analysis and integration module (tATN) to process formerly acquired data. It is the solution given to the issue presented in the introduction of the section \ref{sec:abstract}. 
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.75\textwidth]{res/histories.png}
+\caption{\label{fig:histories}Spacemap history.}
+\end{figure}
 
 \paragraph{Raters} They are the entities that extract the measures to store in the histories from the AS provided by the actuators.
 
@@ -107,17 +108,17 @@ The PrOSA module is composed of various entities which are represented on figure
 \caption{\label{fig:krl}Knowledge Representation Layer.}
 \end{figure}
 
-This module is described on figure \ref{fig:krl}, which is self-explanatory. All instances of objects in the KRL have their counterpart in the scene graph. Such a couple defines a Semantic Entity (SE). A mediator module allows to synchronize different representations of the same SE for different modules. For example, a transition of an object from a position to another can be represented as a difference between two points in the world coordinate system or as a graph path (each node represents a zone of the world).
+This module is described in figure \ref{fig:krl}, which is self-explanatory. All instances of objects in the KRL have their counterpart in the scene graph. Each of these couples defines a Semantic Entity (SE). A mediator module allows to synchronize different representations of the same SE for different modules. For example, a transition of an object from a position to another can be represented as a difference between two points in the world coordinate system or as a graph path (each node represents a zone of the world).
 
 In our example, the KRL allows the other modules to know what interactions are possible with a wheel and with what speech and gesture command.
 
 \subsection{Multimodal integration module}
 \label{subsec:recognition}
-The intuition of the recognition module working is to sequentially analyse the user actions (including speech and gestures) step by step, while setting up the resulting action. When the users actions were entirely analysed, the resulting system action is considered to be completely defined and so it is performed.
+The intuition of the recognition module working is to sequentially analyse the user actions (including speech and gestures) step by step, while setting up the resulting action. When the users actions were entirely analysed, the resulting system action is considered to be completely defined and so is performed.
 
 We can take the use-case defined in section \ref{sec:overview} in order to illustrate this intuition:
 
-\paragraph{"Turn..."} The system "understands" that it will have to perform a rotation and as a consequence sets up a Rotation Action. This Action is characterized by an object to rotate, an axis and an angle, which remain unknowns for now.
+\paragraph{"Turn..."} The system "understands" that it will have to perform a rotation and as a consequence sets up a Rotation Action. This Action is characterized by an object to rotate, an axis and an angle, which remain unknown for now.
 
 \paragraph{Pointing gesture} The object to rotate is located in the direction pointed by the user. As there can be many different objects in this direction, the indications are insufficient for now.
 
@@ -128,17 +129,19 @@ We can take the use-case defined in section \ref{sec:overview} in order to illus
 \paragraph{Rotation gesture} From the gesture, the system can retrieve the angle and the axis. The wheel rotates following the gesture, at the same time.
 \\
 \\
-The formal way to implement this intuition is to use a graph structure (as it is done in the tATN module). An example is given on figure \ref{fig:tATN}. The edges are associated to a transition condition (a detected action of the user), guarding a system action (its reaction to the user action, as depicted in the intuition). The nodes don't have a semantic signification, but they can be interpreted as the states of the system control variables used in order to set up the resulting action. The interest of this system is to execute commands "on-the-fly", what provides agility to the system, in opposition to a system which would buffer commands and then execute them.
+The formal way to implement this intuition is to use a graph structure (as it is done in the tATN module). An example is given in figure \ref{fig:tATN}. The edges are associated to a transition condition (a detected action of the user), guarding a system action (its reaction to the user action, as depicted in the intuition). The nodes don't have a semantic signification, but they can be interpreted as the states of the system control variables used in order to set up the resulting action. The interest of this system is to execute commands "on-the-fly", what provides agility to the system, in opposition to a system which would buffer commands and then execute them.
 
-The node \textit{R42} is in fact a motion-modificator or manipulator of the PrOSA module (see figure \ref{fig:PrOSA}), shared with the tATN module. It corresponds to the state in which the wheel rotates following the hand movement. Hence, the command is special because the rotation gesture and the feedback, i.e the rotating wheel, must be executed at the same time. It illustrates the fact that the gesture processing and the interpretation have to be coupled when a continuous feedback is needed. In the opposite case, the interpretation of the gesture could occur too late, because the simulation loop would have to alternate the interpretation of gestures, stored in a buffer for example, and the resulting executions.
+The name "temporal Augmented Transition Network" is due to the fact that timestamps are introduced in the graph. Indeed, the states are marked by a timestamp. They allow the guarding conditions to refer to events stored in the histories of the PrOSA module. For example, one of the conditions between the states $O_2$ and $O_3$, $if(overlap(pointing, t))$, constrains a pointing gesture to have occurred at the same time than the reaching of state $O_2$ (at time $t$), that is to say at the beginning of an object description.
 
-Other coupling are used. For instance, a system action can require a call to a function of the PrOSA module, like a predicate linked to the histories, in order to know if the user was facing a particular object for example. The PrOSA module itself can call the tATN module in order to know if a gesture must be interpreted as a special command. Calls can be triggered from the tATN to the KRL too, in order to know what actions are possible on a wheel for instance.
+The node \textit{R42} is in fact a motion-modificator or manipulator of the PrOSA module (see figure \ref{fig:PrOSA}), shared with the tATN module. It corresponds to the state in which the wheel rotates following the hand movement. Hence, the command is special because the rotation gesture and the feedback, i.e the rotating wheel, must be executed at the same time. It illustrates the fact that the gesture processing and the interpretation have to be coupled when a continuous feedback is needed. In the opposite case, the interpretation of the gesture could occur too late, because the simulation loop would have to alternate the interpretation of gestures, which parameters are stored in the histories, and the resulting executions.
+
+Other coupling are used. For instance, a system action can require a call to a function of the PrOSA module, usually a predicate linked to the histories, in order to know if the user was facing a particular object for example. Calls can be triggered from the tATN to the KRL too, in order to know what actions are possible on a wheel for instance.
 
 The human language is processed as a computer language, with a grammar system. Indeed, the graph structure described above is nothing less than a grammar analyser coupled with an interpreter.
 
 In comparison to the pioneer system presented in \cite{putthatthere}, the system described here is richer, since it provides to gestures a stronger semantic power. It not only allows to point an object, but also to describe a movement for instance. Gestures are here part of the control language.
 
-\begin{figure}
+\begin{figure}[!h]
 \centering
 \includegraphics[width=0.75\textwidth]{res/tATN.png}
 \caption{\label{fig:tATN}tATN module.}
@@ -149,43 +152,53 @@ In comparison to the pioneer system presented in \cite{putthatthere}, the system
 \subsection{New interaction possibilities}
 \label{subsec:possibilities}
 
-\begin{figure}
+Gesture processing and execution of commands being highly coupled, it is possible to provide continuous feedback, i.e performed at the same time than the gesture, like in our first example of the rotating wheel. It is one of the main enhancements brought by the system. In comparison, a former architecture presented in figure \ref{fig:kaiser}, still young when the paper was published\footnote{respective years of publication: 2003 and 2005}, presented a complete decoupling between the gesture processing and the multimodal integration. Indeed, the message passing system form a closed loop where the gestures and utterances transit as a command flow, interpreted when the next involved module is ready. It introduces delays that are not compatible with continuous feedback. As a matter of fact, the examples of interactions reported in \cite{kaiser} show users imitating a motion (e.g, rotation) for the object to move as a consequence of the complete gesture but never show users controlling motions "online".
+
+\begin{figure}[!h]
 \centering
 \includegraphics[width=1.25\textwidth]{res/kaiser_architecture.png}
 \caption{\label{fig:kaiser}Architecture presented in \cite{kaiser}.}
 \end{figure}
 
-Gesture processing and execution of commands being highly coupled, it is possible to provide continuous feedback, i.e performed at the same time than the gesture, like in our first example of the rotating wheel. It is one of the main enhancements brought by the system. In comparison, a former architecture presented at figure \ref{fig:kaiser}, still young when the paper was published\footnote{respective years of publication: 2003 and 2005}, presented a complete decoupling between the gesture processing and the multimodal integration. Indeed, the message passing system form a closed loop where the gestures and utterances transit as a command flow, interpreted when the next involved module is ready. It introduces delays that are not compatible with continuous feedback. As a matter of fact, the examples of interactions reported in \cite{kaiser} show users imitating a motion (e.g, rotation) for the object to move as a consequence of the complete gesture but never show users controlling motions "online".
-
 \subsection{Shorten delays}
 \label{subsec:delays}
-It is hard to make comparisons between this system and others in terms of delays because of the absence of any evaluation. Although the goal of this paper is obviously not to test a method but to present a tool, some evaluation would have been appreciated. Still, some assumptions can be made, considering that the enhancements claimed by the author are actual.
+It is hard to make comparisons between this system and others in terms of delays because of the absence of any quantitative evaluation. Although the goal of this paper is obviously not to test a method but to present an architecture, some evaluations would have been appreciated. Still, some assumptions can be made, considering that the enhancements claimed by the author are actual.
 
-The current presented system solves a problem mentioned in \cite{putthatthere}: when the user wants to rename a form, he has to pause for an instant before uttering the new name of the object, like in the sentence \textit{"Call that... the companion cube"}. This delay time is necessary for the system to switch from the speech recognition mode to the training mode (for the learning of the name "companion cube"). In the current system, such a switching of context is not necessary because the KRL module allows to define the possible interaction "Recall" on some objects, parametrized with specific utterances. Here, a simple use of the object-centered concept avoids such delays. Obviously, it must be recall that \cite{putthatthere} was published in 1980 and that the systems speed has increased since then. However, the "change of context" problem remains actual. The proposed modularity solves this type of issue and so proves its interest.
+The presented system solves a problem mentioned in \cite{putthatthere}: when the user wants to rename a form, he has to pause for an instant before uttering the new name of the object, like in the sentence \textit{"Call that... the companion cube"}. This delay time is necessary for the system to switch from the speech recognition mode to the training mode (for the learning of the name \textit{"companion cube"}). In the system of the reference paper, such a switching of context is not necessary because the KRL module allows to define the possible interaction "Recall" on some objects, parametrized with specific utterances. Here, a simple use of the object-centered concept used in the KRL and the coupling avoid such delays. Obviously, it must be recall that \cite{putthatthere} was published in 1980 and that the systems speed has increased since then. However, the "change of context" problem remains actual. The proposed modularity solves this type of issue and so proves its interest.
 
 As a direct consequence of what is said in section \ref{subsec:possibilities} about message based communication between the modules of the architecture presented in \cite{kaiser}, one can expect reduced delays between the ending of a gesture or sentence utterance and the visual feedback. The delay presented in \cite{kaiser} of 1.1 seconds in average is not high but perceptible and more importantly can make the user feel that he doesn't really interact with the manipulated object, as stated in \cite{responsetime}. It excludes the integration of continuous feedback.
 
 \subsection{Implementation concerns}
-The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{subsec:delays}. However, it brings also too many dependencies between the modules and as a result affects the re-usability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
+The coupling of the modules, due to possible function calls between the tATN module and the others and also due to the motion-modificators and manipulators shared by the PrOSA and the tATN modules, has the main benefit of removing delays, as explained in sections \ref{subsec:recognition} and \ref{subsec:delays}. However, it brings also too many dependencies between the modules and as a result affects the reusability and the customizability of the code, what the author himself admits in \cite{hcii}. He proposes as an alternative to substitute function calls by functors. Indeed, these objects inherit from the top-class of the programming language used (the \texttt{Object} class in java) and so guarantee the re-usability of the algorithms. The programmers only have to encapsulate all their own implementations as functors in the same specific module. 
 
 \section{Multimodal integration}
 
-The Multimodal Integration module is finite-state based, thanks to its representation as a graph. The main concurrent kind of approaches are said unification-based.
+The Multimodal Integration module is finite-state based. The main concurrent kind of approaches are said unification-based.
 
 \subsection{The Unification-based approach in a nutshell}
-It was purposed by Johnson in \cite{unification-based}. It consists in a system of typed structures. Each structure represents a gesture or a spoken sentence. They own typed fields that define some information. The main feature informs about the content of the gesture or sentence, for example the content of a sentence can be a create command defined by the object it creates and the location of the creation.
+It was purposed by Johnson in \cite{unification-based}. It consists of a system of typed structures. Each structure represents a gesture or a spoken sentence. They own typed fields that define some information. The main feature informs about the content of the gesture or sentence, for example the content of a sentence can be a create command defined by the object it creates and the location of the creation.
 
-The incoming gestures and utterances are stored following this formalism. A complete command is composed of a sentence which states the command type (e.g, "create a wheel") and of a sequence of gestures that give the parameters of the command (e.g, a pointing gesture give the location of a creation command). Hence, the commands can be viewed as rules of the form $Command \rightarrow sentence$ $gesture_1$ $...$ $gesture_n$ (in \cite{unification-based} the formalisms are more complex but it was intentionally simplified for the sake of clarity). Note that the left part of the rule is also a featured structure for which the features are primarily unknown. A system of constraints is used in order to unify the missing values with the value of the features of the elements at the right part of the rule. The following simplified example illustrates this operation:
+The outline diagram of unification-based approaches is in figure \ref{fig:unification}. The incoming gestures and utterances are stored following this formalism. A complete command is composed of a sentence or gesture stating the command type (e.g, "create a wheel") and of a sequence of gestures or sentences that give the parameters of the command (e.g, a pointing gesture give the location of a creation command). Hence, a majority of the commands can be viewed as rules of the form:
+\\\\
+$Command \rightarrow sentence$ $gesture_1$ $...$ $gesture_n$
+\\\\
+In \cite{unification-based} the formalisms are more complex but it was intentionally simplified for the sake of clarity. Note that the left part of the rule is also a featured structure for which the features are primarily unknown. A system of constraints is used in order to unify the missing values with the value of the features of the elements at the right part of the rule. The following simplified example illustrates this operation:
 
 \begin{itemize}
 	\item $Command = \lbrace content: C \rbrace$ 
-	\item $sentence = \lbrace type: translation, content: \lbrace object: wheel, location: line[P_1, P_2] \rbrace\rbrace$
-	\item $gesture_1 = \lbrace type: point, content: \lbrace location: p_1 \rbrace\rbrace$
-	\item $gesture_2 = \lbrace type: point, content: \lbrace location: p_2 \rbrace\rbrace$
+	\item $sentence = \lbrace type: translation, \: content: \lbrace object: wheel, \: location: line[P_1, P_2] \rbrace\rbrace$
+	\item $gesture_1 = \lbrace type: point,\: content: \lbrace location: p_1 \rbrace\rbrace$
+	\item $gesture_2 = \lbrace type: point,\: content: \lbrace location: p_2 \rbrace\rbrace$
 	\item $constraints = \lbrace C := sentence.content, P_1 := p_1, P_2 := p2 \rbrace$
 \end{itemize}
 
-Obviously, the constraint system can be more complex and need a constraints solver. When the unification is complete, the command can be triggered.
+Obviously, the constraint system can be more complex and need a constraint solver. When the unification is complete, the command can be triggered.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1\textwidth]{res/unification_en.png}
+\caption{\label{fig:unification}Outline schemata of unification-based approaches.}
+\end{figure}
 
 This system has the advantage to be very simple to implement. A large class of rules can be designed with constraints. Nevertheless, the input gestures and utterances have to be parsed and assigned to typed feature structures, what can generate errors of interpretation. That is why a list of possible structures is created for each input modality. The executed command is then the one which is generated by the best combination of inputs, with respect to probabilistic considerations. The operation is complex and makes continuous commands (e.g, the rotating wheel) impossible: such commands would require a delay after the generation of the list of best possible commands in order to wait for an hypothetical incoming gesture, at the expense of other commands ready to be executed. As commands can be executed only when all of their components were performed, continuous feedback is impossible. Moreover, generating the list of the possible combinations has an exponential complexity in the worst case, as stated by Johnson in \cite{state-based}.
 
@@ -194,11 +207,11 @@ This approach was first introduced in \cite{state-based}. It presents how multim
 
 Thanks to the transducers sequential structure, it is possible to integrate continuously the incoming modalities, what is impossible with unification-based approaches. The section \ref{subsec:recognition} explains how it is implemented in the system proposed by Latoschick, thanks to the PrOSA module.
 
-Even if \cite{state-based} clearly specifies the state-based approach, it avoids the question of gesture sequence and utterances synchronization. Indeed, a user can utter a sentence like "Translate the wheel from there to there" without pointing anything and only then perform the gesture sequence (pointing of the wheel and a target point). Without synchronization system, the matching of two consecutive sequences of a different modality is "forced". Hence, commands can be triggered unintentionally. That is why timestamps are needed. They can impose time constraints between gestures and utterances. Such timestamps are introduced in the system proposed by Latoschick. Indeed, the states of the transducer are marked by a timestamp. They allow the guarding conditions to refer to events stored in the histories of the PrOSA module. For example, one of the conditions between the states $O_2$ and $O_3$, $if(overlap(pointing, t))$, constrains a pointing gesture to have occurred at the same time than the reaching of state $O_2$ (at time $t$), that is to say at the beginning of an object description.
+Even if \cite{state-based} clearly specifies the state-based approach, it avoids the question of gesture sequence and utterances synchronization. Indeed, a user can utter a sentence like "Translate the wheel from there to there" without pointing anything and only then perform the gesture sequence (pointing of the wheel and a target point). Without synchronization system, the matching of two consecutive sequences of a different modality is "forced". Hence, commands can be triggered unintentionally. That is why timestamps are needed. They can impose time constraints between gestures and utterances. That is why timestamps in the tATN and histories in the PrOSA module are needed.
 
 \section{Conclusion}
 
-In this report, a framework for multimodal interaction in an immersive VE was presented and discussed. It has been shown that highly coupled multimodal parsing and multimodal recognition modules (respectively PrOSA and tATN) can lead to reduced delays between the user command and the feedback. This was possible thanks to a multimodal integration module based on a transducer, an automaton where edges are guarded by conditions related to the multimodal commands. The command is progressively built-up when the transitions are activated. Direct access to the multimodal parsing module allows to use histories, which are data structures storing the multimodal parameters, such as the pointed object and coordinates, with respect to the date of execution. Timestamps allow to synchronize the gestures and the speech commands. Continuous commands, that is to say with a feedback following the user movement, are made possible mostly thanks to shared transducer states between PrOSA and tATN: the incoming pieces of continuous gesture are directly integrated to the transducer in order for the feedback to continue.
+In this report, a framework for multimodal interaction in an immersive VE was presented and discussed. It has been shown that highly coupled gesture processing and multimodal recognition modules (respectively PrOSA and tATN) can lead to reduced delays between the user command and the feedback. This was possible thanks to a multimodal integration module based on a transducer, an automaton where edges are guarded by conditions related to the multimodal commands. The command is progressively built-up when the transitions are activated. Direct access to the gesture processing module allows to use histories, which are data structures storing the multimodal parameters, such as a pointed object or coordinates, with respect to the date of execution. Timestamps allow to synchronize the gestures and the speech commands. Continuous commands, that is to say with a feedback following the user movement, are made possible mostly thanks to shared transducer states between PrOSA and tATN: the incoming pieces of continuous gesture are directly integrated to the transducer in order for the feedback to continue.
 
 This framework is well accepted by the majority of the researchers. However, other approaches were proposed after the publication of this paper, such as MUMIF \cite{mumif} which is unification-based, but is destined to 2D applications not requiring continuous feedback. In the field of VR applications the presented framework is still a reference. The only real drawback that was reported is that such a tight coupling can result in not reusable code. Nevertheless, M.E. Latoschik gives some advices and solutions in \cite{hcii}.
 

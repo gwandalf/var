@@ -1,26 +1,26 @@
 \select@language {english}
 \contentsline {section}{\numberline {1}Introduction}{2}
 \contentsline {section}{\numberline {2}Multimodality in VR applications}{3}
-\contentsline {subsection}{\numberline {2.1}Context}{3}
-\contentsline {subsection}{\numberline {2.2}Immersive impression importance}{4}
+\contentsline {subsection}{\numberline {2.1}Immersive impression importance}{3}
+\contentsline {subsection}{\numberline {2.2}Context}{4}
 \contentsline {section}{\numberline {3}Abstract of the paper}{4}
-\contentsline {subsection}{\numberline {3.1}Overview of the system}{5}
+\contentsline {subsection}{\numberline {3.1}Overview of the system}{4}
 \contentsline {subsection}{\numberline {3.2}Gesture processing}{5}
 \contentsline {paragraph}{Actuators}{5}
 \contentsline {paragraph}{Histories}{6}
 \contentsline {paragraph}{Raters}{6}
 \contentsline {subsection}{\numberline {3.3}Knowledge Representation Layer}{6}
-\contentsline {subsection}{\numberline {3.4}Multimodal integration module}{6}
+\contentsline {subsection}{\numberline {3.4}Multimodal integration module}{7}
 \contentsline {paragraph}{"Turn..."}{7}
 \contentsline {paragraph}{Pointing gesture}{7}
 \contentsline {paragraph}{"... the wheel..."}{7}
-\contentsline {paragraph}{"... like this."}{7}
-\contentsline {paragraph}{Rotation gesture}{7}
-\contentsline {section}{\numberline {4}Tight coupling interests}{8}
-\contentsline {subsection}{\numberline {4.1}New interaction possibilities}{8}
-\contentsline {subsection}{\numberline {4.2}Shorten delays}{10}
+\contentsline {paragraph}{"... like this."}{8}
+\contentsline {paragraph}{Rotation gesture}{8}
+\contentsline {section}{\numberline {4}Tight coupling interests}{9}
+\contentsline {subsection}{\numberline {4.1}New interaction possibilities}{9}
+\contentsline {subsection}{\numberline {4.2}Shorten delays}{9}
 \contentsline {subsection}{\numberline {4.3}Implementation concerns}{10}
 \contentsline {section}{\numberline {5}Multimodal integration}{11}
 \contentsline {subsection}{\numberline {5.1}The Unification-based approach in a nutshell}{11}
 \contentsline {subsection}{\numberline {5.2}Continuous integration with the State-based approach}{12}
-\contentsline {section}{\numberline {6}Conclusion}{12}
+\contentsline {section}{\numberline {6}Conclusion}{13}
